@@ -1,0 +1,23 @@
+[
+  {
+    "id": "astro",
+    "name": "Astro",
+    "url": "https://astro.build/",
+    "description": "以内容为中心的 Web 框架，这座小站的构建工具。",
+    "sample": true
+  },
+  {
+    "id": "mdn",
+    "name": "MDN Web Docs",
+    "url": "https://developer.mozilla.org/zh-CN/",
+    "description": "查阅 Web 平台能力与浏览器 API 的文档入口。",
+    "sample": true
+  },
+  {
+    "id": "webdev",
+    "name": "web.dev",
+    "url": "https://web.dev/",
+    "description": "关于性能、可访问性和现代 Web 体验的阅读材料。",
+    "sample": true
+  }
+]

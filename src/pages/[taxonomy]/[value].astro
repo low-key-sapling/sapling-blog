@@ -1,0 +1,55 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeading from '@/components/PageHeading.astro';
+import ArticleFilters from '@/components/ArticleFilters.astro';
+import ArticleCard from '@/components/ArticleCard.astro';
+import { getArticles, type Article } from '@/lib/content';
+export async function getStaticPaths() {
+  const articles = await getArticles();
+  return (['tags', 'categories'] as const).flatMap((kind) =>
+    [
+      ...new Set(
+        articles.flatMap((article) =>
+          kind === 'tags' ? article.data.tags : [article.data.category],
+        ),
+      ),
+    ].map((value) => ({
+      params: { taxonomy: kind, value },
+      props: {
+        articles: articles.filter((article) =>
+          kind === 'tags'
+            ? article.data.tags.includes(value)
+            : article.data.category === value,
+        ),
+        kind,
+        value,
+      },
+    })),
+  );
+}
+interface Props {
+  articles: Article[];
+  kind: 'tags' | 'categories';
+  value: string;
+}
+const { articles, kind, value } = Astro.props;
+---
+
+<BaseLayout title={`${kind === 'tags' ? '标签' : '分类'}：${value}`}>
+  <div class="container page-content">
+    <PageHeading
+      eyebrow={kind === 'tags' ? 'TAGGED NOTES' : 'A BRANCH OF KNOWLEDGE'}
+      title={value}
+      description={`这里收集了 ${articles.length} 篇相关手记。`}
+    />
+    <ArticleFilters
+      articles={await getArticles()}
+      selected={kind === 'categories' ? value : undefined}
+    />
+    <div class="article-grid">
+      {articles.map((article) => (
+        <ArticleCard article={article} />
+      ))}
+    </div>
+  </div>
+</BaseLayout>

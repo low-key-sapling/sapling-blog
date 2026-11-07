@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+interface Props {
+  image?: ImageMetadata;
+  alt?: string;
+  variant?: string;
+  eager?: boolean;
+}
+const { image, alt = '', variant = 'Web 工程', eager = false } = Astro.props;
+---
+
+{image ? (
+  <Image
+    src={image}
+    alt={alt}
+    widths={[480, 800, 1200]}
+    sizes="(max-width: 640px) 100vw, 50vw"
+    loading={eager ? 'eager' : 'lazy'}
+    format="webp"
+    class="cover-image"
+  />
+) : (
+  <div
+    class:list={[
+      'cover-art',
+      variant.includes('设计')
+        ? 'cover-sand'
+        : variant.includes('日常')
+          ? 'cover-blue'
+          : 'cover-green',
+    ]}
+    aria-hidden="true"
+  >
+    <span class="cover-coordinate">FIELD NOTES / 01—26</span>
+    <svg viewBox="0 0 500 290" fill="none">
+      <circle cx="304" cy="148" r="100" />
+      <circle cx="304" cy="148" r="76" />
+      <circle cx="304" cy="148" r="52" />
+      <path
+        class="cover-stem"
+        d="M242 253c-3-74 30-143 104-192-1 82-35 131-92 127m-3 22c-43-5-76-31-85-83 42 3 74 23 87 55m-7 47 79-132"
+      />
+      <path
+        d="M56 247h387M56 42h387M92 26v239M417 26v239"
+        stroke-dasharray="3 6"
+      />
+      <path d="M84 148h16m-8-8v16M409 148h16m-8-8v16" />
+    </svg>
+    <span class="cover-caption">
+      {variant} <span>生长中的知识 / SAPLING</span>
+    </span>
+  </div>
+)}

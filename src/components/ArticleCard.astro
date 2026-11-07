@@ -1,0 +1,53 @@
+---
+import Cover from './Cover.astro';
+import Icon from './Icon.astro';
+import {
+  articleUrl,
+  formatDate,
+  readingMinutes,
+  taxonomyUrl,
+  type Article,
+} from '@/lib/content';
+interface Props {
+  article: Article;
+  large?: boolean;
+}
+const { article, large = false } = Astro.props;
+const { data } = article;
+---
+
+<article class:list={['article-card', { 'article-card-large': large }]}>
+  <a
+    href={articleUrl(article)}
+    class="card-cover"
+    tabindex="-1"
+    aria-hidden="true"
+  >
+    <Cover
+      image={data.cover}
+      alt={data.coverAlt}
+      variant={data.category}
+      eager={large}
+    />
+  </a>
+  <div class="card-body">
+    <div class="eyebrow">
+      <a href={taxonomyUrl('categories', data.category)}>{data.category}</a>
+      <span class="dot">·</span>
+      <span>{readingMinutes(article.body)} 分钟阅读</span>
+      {data.draft && <span>草稿</span>}
+    </div>
+    <h3>
+      <a href={articleUrl(article)}>{data.title}</a>
+    </h3>
+    <p>{data.summary}</p>
+    <div class="card-bottom">
+      <time datetime={data.published.toISOString()}>
+        {formatDate(data.published)}
+      </time>
+      <span>
+        {data.sample ? '示例文章' : '阅读手记'} <Icon name="arrow" size={16} />
+      </span>
+    </div>
+  </div>
+</article>

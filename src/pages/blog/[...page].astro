@@ -1,0 +1,43 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeading from '@/components/PageHeading.astro';
+import ArticleFilters from '@/components/ArticleFilters.astro';
+import ArticleCard from '@/components/ArticleCard.astro';
+import { getArticles, type Article } from '@/lib/content';
+import { site } from '@/config/site';
+export const getStaticPaths = (async ({ paginate }) =>
+  paginate(await getArticles(), {
+    pageSize: site.pageSize,
+  })) satisfies GetStaticPaths;
+interface Props {
+  page: Page<Article>;
+}
+const { page } = Astro.props;
+const articles = await getArticles();
+---
+
+<BaseLayout
+  title={`文章${page.currentPage > 1 ? ` · 第 ${page.currentPage} 页` : ''}`}
+>
+  <div class="container page-content">
+    <PageHeading
+      eyebrow="THE NOTEBOOK"
+      title="所有手记"
+      description="关于代码、设计和日常探索。把走过的路，写成下一步的线索。"
+    />
+    <ArticleFilters articles={articles} />
+    <div class="article-grid">
+      {page.data.map((article) => (
+        <ArticleCard article={article} />
+      ))}
+    </div>
+    <nav class="pagination" aria-label="文章分页">
+      {page.url.prev && <a href={page.url.prev}>← 上一页</a>}
+      <span>
+        第 {page.currentPage} / {page.lastPage} 页 · 共 {page.total} 篇
+      </span>
+      {page.url.next && <a href={page.url.next}>下一页 →</a>}
+    </nav>
+  </div>
+</BaseLayout>

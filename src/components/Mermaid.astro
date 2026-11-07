@@ -1,0 +1,53 @@
+---
+interface Props {
+  chart: string;
+  caption: string;
+}
+const { chart, caption } = Astro.props;
+---
+
+<figure data-mermaid>
+  <div class="mermaid" role="img" aria-label={caption}></div>
+  <figcaption class="muted">{caption}</figcaption>
+  <details class="mermaid-source">
+    <summary>查看图表源码</summary>
+    <pre data-mermaid-source>{chart}</pre>
+  </details>
+  <p class="muted" data-mermaid-error hidden>
+    图表暂时无法渲染，可展开源码阅读。
+  </p>
+</figure>
+<script>
+  async function renderDiagrams() {
+    const diagrams = document.querySelectorAll<HTMLElement>('[data-mermaid]');
+    try {
+      const { default: mermaid } = await import('mermaid');
+      mermaid.initialize({
+        startOnLoad: false,
+        securityLevel: 'strict',
+        theme:
+          document.documentElement.dataset.theme === 'dark'
+            ? 'dark'
+            : 'neutral',
+        fontFamily: 'Segoe UI, Microsoft YaHei, sans-serif',
+      });
+      for (const [index, diagram] of [...diagrams].entries()) {
+        const source = diagram.querySelector(
+          '[data-mermaid-source]',
+        )!.textContent!;
+        const { svg } = await mermaid.render(
+          `diagram-${index}-${Date.now()}`,
+          source,
+        );
+        diagram.querySelector('.mermaid')!.innerHTML = svg;
+      }
+    } catch {
+      diagrams.forEach((diagram) => {
+        diagram.querySelector<HTMLElement>('[data-mermaid-error]')!.hidden =
+          false;
+      });
+    }
+  }
+  void renderDiagrams();
+  window.addEventListener('theme-changed', () => void renderDiagrams());
+</script>

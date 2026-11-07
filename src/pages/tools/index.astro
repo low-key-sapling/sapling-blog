@@ -1,0 +1,28 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeading from '@/components/PageHeading.astro';
+import { toolbox } from '@/config/site';
+---
+
+<BaseLayout title="工具箱">
+  <div class="container page-content">
+    <PageHeading
+      eyebrow="SMALL TOOLS, EVERYDAY USE"
+      title="顺手的小工具"
+      description="把重复的事情交给工具，把注意力留给真正的问题。"
+    />
+    <div class="tool-grid">
+      {toolbox.map((tool) => (
+        <a class="tool-card" href={`/tools/${tool.slug}/`}>
+          <div class="tool-symbol">{tool.symbol}</div>
+          <h2>{tool.title} ↗</h2>
+          <p>{tool.description}</p>
+          <small>{tool.tags}</small>
+        </a>
+      ))}
+    </div>
+    <p class="tool-privacy">
+      所有输入仅在当前浏览器中处理，不上传，也不自动保存。刷新或关闭页面后，输入即被清空。
+    </p>
+  </div>
+</BaseLayout>

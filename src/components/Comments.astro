@@ -1,0 +1,84 @@
+---
+import { site } from '@/config/site';
+const { repo, repoId, category, categoryId } = site.giscus;
+const configured = Boolean(repo && repoId && category && categoryId);
+---
+
+<section class="comments" aria-labelledby="comments-title" data-pagefind-ignore>
+  <h2 id="comments-title">让想法继续生长</h2>
+  {configured ? (
+    <div
+      id="comments"
+      data-repo={repo}
+      data-repo-id={repoId}
+      data-category={category}
+      data-category-id={categoryId}
+      data-term={Astro.url.pathname}
+    >
+      <p data-comments-status role="status">
+        评论将在进入此区域时加载。
+      </p>
+      <div class="giscus"></div>
+    </div>
+  ) : (
+    <p>
+      评论暂未开启。本站使用 giscus，配置 GitHub Discussions 后即可参与讨论。
+    </p>
+  )}
+</section>
+<script>
+  const root = document.querySelector<HTMLElement>('#comments');
+  if (root) {
+    const status = root.querySelector<HTMLElement>('[data-comments-status]')!;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        status.textContent = '正在加载 GitHub 评论…';
+        const script = document.createElement('script');
+        script.src = 'https://giscus.app/client.js';
+        script.async = true;
+        script.crossOrigin = 'anonymous';
+        for (const [name, value] of Object.entries(root.dataset))
+          script.setAttribute(
+            `data-${name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}`,
+            value!,
+          );
+        script.setAttribute('data-mapping', 'specific');
+        script.setAttribute('data-strict', '1');
+        script.setAttribute('data-lang', 'zh-CN');
+        script.setAttribute(
+          'data-theme',
+          document.documentElement.dataset.theme ?? 'light',
+        );
+        script.setAttribute('data-reactions-enabled', '1');
+        script.onerror = () => {
+          status.textContent = '评论服务暂时无法连接，不影响正文阅读。';
+        };
+        script.onload = () => {
+          status.textContent =
+            '评论由 GitHub Discussions 提供，登录 GitHub 后可参与。';
+        };
+        root.querySelector('.giscus')!.append(script);
+        window.setTimeout(() => {
+          if (!root.querySelector('iframe'))
+            status.textContent = '评论尚未加载完成，可稍后刷新重试。';
+        }, 15000);
+      },
+      { rootMargin: '150px' },
+    );
+    observer.observe(root);
+    window.addEventListener('theme-changed', () => {
+      root
+        .querySelector<HTMLIFrameElement>('iframe.giscus-frame')
+        ?.contentWindow?.postMessage(
+          {
+            giscus: {
+              setConfig: { theme: document.documentElement.dataset.theme },
+            },
+          },
+          'https://giscus.app',
+        );
+    });
+  }
+</script>

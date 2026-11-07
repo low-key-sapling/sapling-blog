@@ -1,0 +1,50 @@
+---
+slug: mdx-interactions
+title: 在 MDX 里，为一个想法加上交互
+summary: 用一个可拖动的增长模型，演示如何让 React 组件成为文章的一部分。
+published: 2026-11-01
+category: Web 工程
+tags: [React, MDX, 交互演示]
+sample: true
+---
+
+import GrowthDemo from '@/components/demos/GrowthDemo';
+import Callout from '@/components/Callout.astro';
+
+文字擅长表达逻辑，交互适合呈现变量之间的关系。这是一份完整的 MDX 示例：作者提前编写 React 组件，再把它嵌入文章。
+
+## 先试着调整一个变量
+
+下面的滑块控制每一步的增长比例。所有计算发生在浏览器，没有网络请求，也不会保存输入。
+
+<GrowthDemo client:visible />
+
+## 数学模型
+
+这里使用一个简单的离散增长模型：
+
+$$
+a_n = a_0 (1+r)^n
+$$
+
+初始值是 20，增长率由滑块决定。图表只用于说明参数如何影响结果，不用于预测真实世界中的变化。
+
+## 如何嵌入 React 组件
+
+在 `.mdx` 文件顶部导入组件，然后为它指定合适的客户端指令：
+
+```mdx
+import GrowthDemo from '@/components/demos/GrowthDemo';
+
+<GrowthDemo client:visible />
+```
+
+`client:visible` 让组件在进入视口时加载交互。普通文字、标题和首屏组件内容仍然由静态 HTML 提供。
+
+<Callout title="保持演示的边界">
+  这里展示的是作者编写并审核过的组件。读者可以调整参数，但不会运行读者输入的代码。
+</Callout>
+
+## 为演示补充可读说明
+
+即使不拖动滑块，读者也应该能从文字和公式理解主要观点。为输入提供标签，为计算结果提供文本，为不支持脚本的情况保留解释。

@@ -1,0 +1,31 @@
+---
+import { taxonomyUrl, type Article } from '@/lib/content';
+interface Props {
+  articles: Article[];
+  selected?: string;
+}
+const { articles, selected } = Astro.props;
+const categories = [
+  ...new Set(articles.map((article) => article.data.category)),
+];
+---
+
+<nav class="filter-bar" aria-label="文章分类">
+  <div class="filter-items">
+    <a href="/blog/" aria-current={!selected ? 'page' : undefined}>
+      全部文章
+    </a>
+    {categories.map((category) => (
+      <a
+        href={taxonomyUrl('categories', category)}
+        aria-current={selected === category ? 'page' : undefined}
+      >
+        {category}
+      </a>
+    ))}
+  </div>
+  <div class="filter-secondary">
+    <a href="/tags/">标签</a>
+    <a href="/archives/">归档 ↗</a>
+  </div>
+</nav>

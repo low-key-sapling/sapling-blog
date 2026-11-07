@@ -1,0 +1,39 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeading from '@/components/PageHeading.astro';
+import { getArticles, taxonomyUrl } from '@/lib/content';
+export function getStaticPaths() {
+  return [
+    { params: { taxonomy: 'tags' } },
+    { params: { taxonomy: 'categories' } },
+  ];
+}
+const kind = Astro.params.taxonomy as 'tags' | 'categories';
+const title = kind === 'tags' ? '标签' : '分类';
+const articles = await getArticles();
+const counts = new Map<string, number>();
+for (const article of articles)
+  for (const value of kind === 'tags'
+    ? article.data.tags
+    : [article.data.category])
+    counts.set(value, (counts.get(value) ?? 0) + 1);
+---
+
+<BaseLayout title={title}>
+  <div class="container page-content">
+    <PageHeading
+      eyebrow="FOLLOW YOUR CURIOSITY"
+      title={title}
+      description="选一条感兴趣的小路，继续探索。"
+    />
+    <div class="taxonomy-grid">
+      {[...counts].map(([value, count]) => (
+        <a class="taxonomy-card" href={taxonomyUrl(kind, value)}>
+          {kind === 'tags' ? '# ' : ''}
+          {value}
+          <span>{count} 篇 ↗</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

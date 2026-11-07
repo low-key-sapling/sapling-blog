@@ -1,0 +1,84 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeading from '@/components/PageHeading.astro';
+import Icon from '@/components/Icon.astro';
+import { site } from '@/config/site';
+---
+
+<BaseLayout
+  title="关于"
+  description="关于青苗手记，以及这座数字花园的写作方向。"
+>
+  <div class="container page-content" data-pagefind-body>
+    <span hidden data-pagefind-filter="type" data-pagefind-meta="type">
+      关于
+    </span>
+    <PageHeading
+      eyebrow="HELLO, FELLOW EXPLORER"
+      title="你好，欢迎来坐坐"
+      description="代码之外，我们也可以聊聊好奇心。"
+    />
+    <div class="about-layout">
+      <div class="about-body">
+        <p class="sample-banner">
+          以下为占位简介。请在正式发布前替换站名、作者资料和个人链接。
+        </p>
+        <h2 data-pagefind-meta="title">关于{site.name}</h2>
+        <p>
+          这是一个以技术文章为中心的小站。我们希望把零散的知识慢慢连起来：记录一个问题如何被理解、一段代码如何变得清晰、一个想法如何走向可用的作品。
+        </p>
+        <p>
+          「青苗」意味着不急着长成大树。每一次认真记录，都是给下一次思考留下一点养分。
+        </p>
+        <h2>这片花园里有什么</h2>
+        <p>
+          Web
+          开发：关注内容体验、浏览器能力与前端工程。工程实践：拆解复杂问题，选择恰当的工具。日常创造：用小项目验证想法，用手记整理收获。
+        </p>
+        <div class="tag-list">
+          <span class="tag">Web 开发</span>
+          <span class="tag">工程实践</span>
+          <span class="tag">设计与体验</span>
+          <span class="tag">学习笔记</span>
+        </div>
+        <h2>保持联系</h2>
+        <p>
+          目前可以通过 RSS
+          订阅文章。真实社交账号尚未配置，不展示虚构的联系信息。
+        </p>
+        <div class="project-links">
+          {site.socials.map((item) => (
+            <a class="button secondary" href={item.href}>
+              {item.label}
+              <Icon name="external" size={15} />
+            </a>
+          ))}
+        </div>
+      </div>
+      <aside class="about-card">
+        {site.author.avatar ? (
+          <img
+            class="friend-avatar"
+            src={site.author.avatar}
+            width="60"
+            height="60"
+            alt={site.author.name}
+          />
+        ) : (
+          <span class="brand-mark">
+            <Icon name="leaf" size={36} />
+          </span>
+        )}
+        <h2>{site.author.name}</h2>
+        <p>{site.author.bio}</p>
+        <p style="margin-top:22px">
+          状态：持续学习中
+          <br />
+          坐标：互联网的一角
+          <br />
+          这里：一座生长中的数字花园
+        </p>
+      </aside>
+    </div>
+  </div>
+</BaseLayout>

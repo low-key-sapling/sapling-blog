@@ -1,0 +1,22 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeading from '@/components/PageHeading.astro';
+---
+
+<BaseLayout title="全站搜索" noindex>
+  <div class="container page-content">
+    <PageHeading
+      eyebrow="FIND A NEW CONNECTION"
+      title="寻找一片新叶"
+      description="搜索文章、项目、工具、关于与友链。所有搜索在浏览器中完成。"
+    />
+    <button class="button" data-open-search>
+      开始搜索 ⌘ / Ctrl K
+    </button>
+    <noscript>
+      <p>
+        搜索需要启用 JavaScript，也可以浏览<a href="/archives/">文章归档</a>。
+      </p>
+    </noscript>
+  </div>
+</BaseLayout>

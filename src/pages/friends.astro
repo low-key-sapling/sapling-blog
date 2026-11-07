@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeading from '@/components/PageHeading.astro';
+const friends = await getCollection('friends');
+---
+
+<BaseLayout title="友链">
+  <div class="container page-content" data-pagefind-body>
+    <span hidden data-pagefind-filter="type" data-pagefind-meta="type">
+      友链
+    </span>
+    <PageHeading
+      eyebrow="NEIGHBORS IN THE GARDEN"
+      title="另一片风景"
+      description="从这里出发，去看看那些值得驻足的地方。"
+    />
+    <h2 class="sr-only" data-pagefind-meta="title">
+      友链与推荐阅读
+    </h2>
+    <p class="muted" style="margin-bottom:25px">
+      当前为公开技术站点的示例链接，不代表私人友链或合作关系。
+    </p>
+    <div class="friend-grid">
+      {friends.map(({ data }) => (
+        <a
+          class="friend-card"
+          href={data.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {data.avatar ? (
+            <img
+              class="friend-avatar"
+              src={data.avatar}
+              alt=""
+              width="43"
+              height="43"
+              loading="lazy"
+            />
+          ) : (
+            <span class="friend-avatar" aria-hidden="true">
+              {data.name.charAt(0)}
+            </span>
+          )}
+          <div>
+            <h2>{data.name} ↗</h2>
+            <p>{data.description}</p>
+            {data.sample && <small>示例推荐</small>}
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

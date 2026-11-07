@@ -1,0 +1,40 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeading from '@/components/PageHeading.astro';
+import { getArticles, articleUrl } from '@/lib/content';
+const index = (await getArticles()).map((article) => ({
+  id: article.id,
+  title: article.data.title,
+  summary: article.data.summary,
+  url: articleUrl(article),
+}));
+---
+
+<BaseLayout title="我的收藏" noindex>
+  <div class="container page-content">
+    <PageHeading
+      eyebrow="KEPT FOR ANOTHER DAY"
+      title="留给下一次的阅读"
+      description="收藏值得重读的手记，在有空的时候慢慢翻开。记录仅保存在当前浏览器，不跨设备同步。"
+    />
+    <div id="bookmark-list"></div>
+    <div class="empty-state" id="bookmarks-empty">
+      <h2>这里还没有收藏</h2>
+      <p>在文章页点击「收藏文章」，把喜欢的内容留在这里。</p>
+      <a class="button" href="/blog/">
+        去发现手记 →
+      </a>
+    </div>
+    <noscript>
+      <p>查看本地收藏需要启用 JavaScript。</p>
+    </noscript>
+  </div>
+  <script
+    type="application/json"
+    id="article-index"
+    set:html={JSON.stringify(index).replaceAll('<', '\u003c')}
+  />
+  <script>
+    import '@/scripts/bookmarks';
+  </script>
+</BaseLayout>

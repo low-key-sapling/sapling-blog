@@ -1,0 +1,37 @@
+<div class="search-panel" data-search-panel>
+  <form role="search" data-search-form>
+    <label for="search-input">搜索手记、项目与工具</label>
+    <div class="search-input-row">
+      <input
+        id="search-input"
+        type="search"
+        placeholder="试试「静态」或「React」…"
+        autocomplete="off"
+      />
+      <button class="button" type="submit">
+        搜索
+      </button>
+    </div>
+    <label class="search-filter" for="search-type">
+      内容类型{' '}
+      <select id="search-type">
+        <option value="">全部内容</option>
+        <option>文章</option>
+        <option>项目</option>
+        <option>工具</option>
+        <option>关于</option>
+        <option>友链</option>
+      </select>
+    </label>
+  </form>
+  <p class="muted" data-search-status role="status">
+    输入关键词，发现一些新线索。
+  </p>
+  <ul class="search-results" data-search-results></ul>
+  <button class="button secondary" data-search-more hidden>
+    加载更多
+  </button>
+</div>
+<script>
+  import '@/scripts/search';
+</script>

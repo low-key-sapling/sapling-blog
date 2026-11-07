@@ -1,0 +1,77 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeading from '@/components/PageHeading.astro';
+import Cover from '@/components/Cover.astro';
+export async function getStaticPaths() {
+  return (await getCollection('projects')).map((project) => ({
+    params: { slug: project.id },
+    props: { project },
+  }));
+}
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+const { project } = Astro.props;
+const { data } = project;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={data.name} description={data.summary}>
+  <div class="container page-content">
+    <nav class="breadcrumb" aria-label="面包屑">
+      <a href="/projects/">项目</a> / {data.name}
+    </nav>
+    <article class="project-details" data-pagefind-body>
+      <span hidden data-pagefind-filter="type" data-pagefind-meta="type">
+        项目
+      </span>
+      <PageHeading
+        eyebrow="FROM AN IDEA TO A PROJECT"
+        title={data.name}
+        description={data.summary}
+      />
+      <span hidden data-pagefind-meta="title">
+        {data.name}
+      </span>
+      <div class="tag-list">
+        {data.stack.map((tag) => (
+          <span class="tag">{tag}</span>
+        ))}
+      </div>
+      {data.sample && (
+        <p class="sample-banner">
+          示例项目 · 用于演示项目展示结构，不代表真实履历。
+        </p>
+      )}
+      <div class="project-links">
+        {data.source && (
+          <a
+            class="button"
+            href={data.source}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            查看源码 ↗
+          </a>
+        )}
+        {data.demo && (
+          <a
+            class="button secondary"
+            href={data.demo}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            打开演示 ↗
+          </a>
+        )}
+      </div>
+      <div class="article-cover">
+        <Cover image={data.cover} variant="设计与体验" />
+      </div>
+      <div class="prose">
+        <Content />
+      </div>
+    </article>
+  </div>
+</BaseLayout>

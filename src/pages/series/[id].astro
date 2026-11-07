@@ -1,0 +1,37 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeading from '@/components/PageHeading.astro';
+import { getArticles, articleUrl } from '@/lib/content';
+export async function getStaticPaths() {
+  const articles = await getArticles();
+  return (await getCollection('series'))
+    .filter((entry) =>
+      articles.some((article) => article.data.series?.id === entry.id),
+    )
+    .map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+interface Props {
+  entry: CollectionEntry<'series'>;
+}
+const { entry } = Astro.props;
+const articles = (await getArticles())
+  .filter((article) => article.data.series?.id === entry.id)
+  .sort((a, b) => a.data.order! - b.data.order!);
+---
+
+<BaseLayout title={entry.data.title}>
+  <div class="container page-content">
+    <PageHeading
+      eyebrow="READ IN ORDER"
+      title={entry.data.title}
+      description={entry.data.description}
+    />
+    {articles.map((article) => (
+      <div class="archive-entry">
+        <span class="green">{String(article.data.order).padStart(2, '0')}</span>
+        <a href={articleUrl(article)}>{article.data.title}</a>
+      </div>
+    ))}
+  </div>
+</BaseLayout>

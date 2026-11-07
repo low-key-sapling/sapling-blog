@@ -1,0 +1,213 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Cover from '@/components/Cover.astro';
+import Icon from '@/components/Icon.astro';
+import Comments from '@/components/Comments.astro';
+import {
+  getArticles,
+  articleUrl,
+  formatDate,
+  readingMinutes,
+  taxonomyUrl,
+  type Article,
+} from '@/lib/content';
+import { site } from '@/config/site';
+import 'katex/dist/katex.min.css';
+export async function getStaticPaths() {
+  return (await getArticles()).map((article) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}
+interface Props {
+  article: Article;
+}
+const { article } = Astro.props;
+const { data } = article;
+const { Content, headings } = await render(article);
+const collection = data.series ? await getEntry(data.series) : undefined;
+const siblings = collection
+  ? (await getArticles())
+      .filter((item) => item.data.series?.id === collection.id)
+      .sort((a, b) => a.data.order! - b.data.order!)
+  : [];
+const position = siblings.findIndex((item) => item.id === article.id);
+const previous = siblings[position - 1];
+const next = siblings[position + 1];
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: data.title,
+  description: data.summary,
+  datePublished: data.published.toISOString(),
+  dateModified: (data.updated ?? data.published).toISOString(),
+  author: { '@type': 'Person', name: site.author.name },
+  mainEntityOfPage: new URL(articleUrl(article), Astro.site).href,
+};
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.summary}
+  image={data.cover?.src}
+  noindex={data.draft}
+  article={{ published: data.published, updated: data.updated }}
+>
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify(jsonLd).replaceAll('<', '\u003c')}
+  />
+  <progress
+    class="reading-progress"
+    id="reading-progress"
+    max="1"
+    value="0"
+    aria-label="文章阅读进度"
+  ></progress>
+  <div class="container" data-article-id={article.id}>
+    <nav class="breadcrumb" aria-label="面包屑">
+      <a href="/blog/">所有手记</a> <span class="dot">/</span>{' '}
+      <a href={taxonomyUrl('categories', data.category)}>{data.category}</a>
+    </nav>
+    <article data-pagefind-body>
+      <header class="article-header">
+        <div class="eyebrow green">
+          <span data-pagefind-filter="type" data-pagefind-meta="type">
+            文章
+          </span>
+          <span> / {data.category}</span>
+          {data.draft && <strong>本地草稿</strong>}
+        </div>
+        <h1 data-pagefind-meta="title">{data.title}</h1>
+        <p class="summary" data-pagefind-meta="description">
+          {data.summary}
+        </p>
+        <div class="article-meta">
+          <span>{site.author.name}</span>
+          <time datetime={data.published.toISOString()}>
+            发布于 {formatDate(data.published)}
+          </time>
+          {data.updated && (
+            <time datetime={data.updated.toISOString()}>
+              更新于 {formatDate(data.updated)}
+            </time>
+          )}
+          <span>约 {readingMinutes(article.body)} 分钟阅读</span>
+        </div>
+        {data.sample && (
+          <p class="sample-banner">
+            示例文章 · 用于展示内容组织与阅读体验，不代表作者的真实经历。
+          </p>
+        )}
+      </header>
+      <div class="article-layout">
+        <div class="article-content">
+          <div
+            class="resume-prompt"
+            id="resume-prompt"
+            hidden
+            data-pagefind-ignore
+          >
+            <span id="resume-label"></span>
+            <button class="button" id="resume-reading">
+              继续阅读
+            </button>
+            <button class="button secondary" id="dismiss-resume">
+              从头阅读
+            </button>
+          </div>
+          <div class="article-cover">
+            <Cover
+              image={data.cover}
+              alt={data.coverAlt}
+              variant={data.category}
+              eager
+            />
+          </div>
+          <div class="prose" id="article-body">
+            <Content />
+          </div>
+          <div class="tag-list" style="margin-top:30px">
+            {data.tags.map((tag) => (
+              <a class="tag" href={taxonomyUrl('tags', tag)}>
+                # {tag}
+              </a>
+            ))}
+          </div>
+          <div class="article-actions" data-pagefind-ignore>
+            <button class="button" id="bookmark-button" aria-pressed="false">
+              <Icon name="bookmark" size={17} />
+              <span>收藏文章</span>
+            </button>
+            <button class="button secondary" id="copy-link">
+              复制链接
+            </button>
+            <button class="button secondary" id="back-top">
+              ↑ 返回顶部
+            </button>
+          </div>
+          {collection && (
+            <section class="series-box" data-pagefind-ignore>
+              <h2>
+                <a href={`/series/${collection.id}/`}>
+                  系列：{collection.data.title}
+                </a>
+              </h2>
+              <ol>
+                {siblings.map((item) => (
+                  <li>
+                    <a
+                      href={articleUrl(item)}
+                      aria-current={item.id === article.id ? 'page' : undefined}
+                    >
+                      {item.data.title}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+              <nav class="series-navigation" aria-label="系列文章导航">
+                <span>
+                  {previous && (
+                    <a href={articleUrl(previous)}>
+                      ← 上一篇：{previous.data.title}
+                    </a>
+                  )}
+                </span>
+                <span>
+                  {next && (
+                    <a href={articleUrl(next)}>下一篇：{next.data.title} →</a>
+                  )}
+                </span>
+              </nav>
+            </section>
+          )}
+          <Comments />
+        </div>
+        <aside class="article-toc" data-pagefind-ignore>
+          <h2>这篇手记的路线</h2>
+          <nav aria-label="文章目录">
+            {headings
+              .filter((heading) => heading.depth <= 3)
+              .map((heading) => (
+                <a
+                  class:list={{ subheading: heading.depth === 3 }}
+                  href={`#${heading.slug}`}
+                >
+                  {heading.text}
+                </a>
+              ))}
+          </nav>
+          <div class="toc-links">
+            <a href="/series/">探索专题系列 ↗</a>
+            <a href="/rss.xml">通过 RSS 订阅 ↗</a>
+          </div>
+        </aside>
+      </div>
+    </article>
+  </div>
+  <script>
+    import '@/scripts/article';
+  </script>
+</BaseLayout>

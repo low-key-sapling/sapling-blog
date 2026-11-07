@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeading from '@/components/PageHeading.astro';
+import Cover from '@/components/Cover.astro';
+const projects = await getCollection('projects');
+---
+
+<BaseLayout title="项目">
+  <div class="container page-content">
+    <PageHeading
+      eyebrow="IDEAS, MADE TANGIBLE"
+      title="让想法落地"
+      description="一些小小的构建实验。记录从想法到实现，也保留过程中的取舍。"
+    />
+    <div class="project-grid">
+      {projects.map(({ id, data }) => (
+        <article class="article-card">
+          <a
+            class="card-cover"
+            href={`/projects/${id}/`}
+            tabindex="-1"
+            aria-hidden="true"
+          >
+            <Cover image={data.cover} variant="设计与体验" />
+          </a>
+          <div class="card-body">
+            <p class="eyebrow green">{data.sample ? '示例项目' : 'PROJECT'}</p>
+            <h2>
+              <a href={`/projects/${id}/`}>{data.name} ↗</a>
+            </h2>
+            <p>{data.summary}</p>
+            <div class="tag-list" style="margin-top:18px">
+              {data.stack.map((tag) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

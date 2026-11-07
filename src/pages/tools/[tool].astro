@@ -1,0 +1,53 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeading from '@/components/PageHeading.astro';
+import TextTool from '@/components/tools/TextTool';
+import TimestampTool from '@/components/tools/TimestampTool';
+import { toolbox } from '@/config/site';
+export function getStaticPaths() {
+  return toolbox.map((tool) => ({
+    params: { tool: tool.slug },
+    props: { tool },
+  }));
+}
+interface Props {
+  tool: (typeof toolbox)[number];
+}
+const { tool } = Astro.props;
+---
+
+<BaseLayout title={tool.title} description={tool.description}>
+  <div class="container page-content">
+    <nav class="breadcrumb" aria-label="面包屑">
+      <a href="/tools/">工具箱</a> / {tool.title}
+    </nav>
+    <div data-pagefind-body>
+      <span hidden data-pagefind-filter="type" data-pagefind-meta="type">
+        工具
+      </span>
+      <span hidden data-pagefind-meta="title">
+        {tool.title}
+      </span>
+      <PageHeading
+        eyebrow="A TOOL FOR YOUR NEXT STEP"
+        title={tool.title}
+        description={tool.description}
+      />
+      <p class="tool-privacy" style="margin-top:0;margin-bottom:22px">
+        输入仅在浏览器处理，不上传、不自动保存。
+        {tool.slug === 'json' &&
+          '严格 JSON：不接受注释和尾随逗号，保留原始数字表示。'}
+        {tool.slug === 'base64' &&
+          '标准 Base64：使用 UTF-8，解码时需要正确的 = 填充。'}
+      </p>
+    </div>
+    {tool.slug === 'timestamp' ? (
+      <TimestampTool client:load />
+    ) : (
+      <TextTool kind={tool.slug} client:load />
+    )}
+    <noscript>
+      <p>此工具需要 JavaScript，请启用后使用。</p>
+    </noscript>
+  </div>
+</BaseLayout>

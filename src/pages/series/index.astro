@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeading from '@/components/PageHeading.astro';
+import { getArticles } from '@/lib/content';
+const articles = await getArticles();
+const series = (await getCollection('series')).filter((entry) =>
+  articles.some((article) => article.data.series?.id === entry.id),
+);
+---
+
+<BaseLayout title="专题系列">
+  <div class="container page-content">
+    <PageHeading
+      eyebrow="CONNECTED IDEAS"
+      title="把知识串成线"
+      description="沿着一个主题，从起点走到更深的地方。"
+    />
+    <div class="project-grid">
+      {series.map((entry) => (
+        <a class="tool-card" href={`/series/${entry.id}/`}>
+          <div class="tool-symbol">↳</div>
+          <h2>{entry.data.title}</h2>
+          <p>{entry.data.description}</p>
+          <small>
+            {
+              articles.filter((article) => article.data.series?.id === entry.id)
+                .length
+            }{' '}
+            篇文章 · 开始阅读 →
+          </small>
+        </a>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

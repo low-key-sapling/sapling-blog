@@ -1,0 +1,39 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageHeading from '@/components/PageHeading.astro';
+import {
+  getArticles,
+  articleUrl,
+  formatDate,
+  type Article,
+} from '@/lib/content';
+const articles = await getArticles();
+const months = new Map<string, Article[]>();
+for (const article of articles) {
+  const month = article.data.published.toISOString().slice(0, 7);
+  months.set(month, [...(months.get(month) ?? []), article]);
+}
+---
+
+<BaseLayout title="文章归档">
+  <div class="container page-content">
+    <PageHeading
+      eyebrow="A LITTLE AT A TIME"
+      title="时间里的手记"
+      description={`共 ${articles.length} 篇记录，每一篇都是生长的痕迹。`}
+    />
+    {[...months].map(([month, entries]) => (
+      <section class="archive-group">
+        <h2>{month.replace('-', ' / ')}</h2>
+        {entries.map((article) => (
+          <div class="archive-entry">
+            <time datetime={article.data.published.toISOString()}>
+              {formatDate(article.data.published)}
+            </time>
+            <a href={articleUrl(article)}>{article.data.title}</a>
+          </div>
+        ))}
+      </section>
+    ))}
+  </div>
+</BaseLayout>
