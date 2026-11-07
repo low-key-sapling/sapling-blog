@@ -4,7 +4,7 @@
 
 ## 发布前配置
 
-1. 在 `src/config/site.ts` 替换示例站名、作者资料和社交链接。
+1. 在 `src/config/site.ts` 核对站名、作者资料和公开链接。
 2. 设置 `PUBLIC_SITE_URL=https://你的域名`。本地默认 `https://example.com` 只是生成 canonical、RSS、sitemap 和分享信息的占位地址。
 3. 替换、删除或继续明确标注示例文章、项目和友链。
 4. 可选配置 giscus 与统计；未配置时不请求外部服务。

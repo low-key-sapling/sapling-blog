@@ -5,10 +5,7 @@ import Icon from '@/components/Icon.astro';
 import { site } from '@/config/site';
 ---
 
-<BaseLayout
-  title="关于"
-  description="关于青苗手记，以及这座数字花园的写作方向。"
->
+<BaseLayout title="关于" description={site.author.bio}>
   <div class="container page-content" data-pagefind-body>
     <span hidden data-pagefind-filter="type" data-pagefind-meta="type">
       关于
@@ -20,12 +17,10 @@ import { site } from '@/config/site';
     />
     <div class="about-layout">
       <div class="about-body">
-        <p class="sample-banner">
-          以下为占位简介。请在正式发布前替换站名、作者资料和个人链接。
-        </p>
         <h2 data-pagefind-meta="title">关于{site.name}</h2>
         <p>
-          这是一个以技术文章为中心的小站。我们希望把零散的知识慢慢连起来：记录一个问题如何被理解、一段代码如何变得清晰、一个想法如何走向可用的作品。
+          我在这里整理技术笔记。有时候是一条 Windows
+          命令，有时候是一个网页上的交互。每篇手记都尽量留下关键的几行代码，以及用来验证结果的例子。
         </p>
         <p>
           「青苗」意味着不急着长成大树。每一次认真记录，都是给下一次思考留下一点养分。
@@ -33,7 +28,7 @@ import { site } from '@/config/site';
         <h2>这片花园里有什么</h2>
         <p>
           Web
-          开发：关注内容体验、浏览器能力与前端工程。工程实践：拆解复杂问题，选择恰当的工具。日常创造：用小项目验证想法，用手记整理收获。
+          工程手记讨论网页怎样构建，设计与体验手记关注页面读起来、用起来是否顺手。日常创造收录小工具和自动化脚本。
         </p>
         <div class="tag-list">
           <span class="tag">Web 开发</span>
@@ -41,11 +36,8 @@ import { site } from '@/config/site';
           <span class="tag">设计与体验</span>
           <span class="tag">学习笔记</span>
         </div>
-        <h2>保持联系</h2>
-        <p>
-          目前可以通过 RSS
-          订阅文章。真实社交账号尚未配置，不展示虚构的联系信息。
-        </p>
+        <h2>订阅与仓库</h2>
+        <p>新文章会出现在 RSS 订阅里，博客的项目仓库在 GitHub。</p>
         <div class="project-links">
           {site.socials.map((item) => (
             <a class="button secondary" href={item.href}>
@@ -71,13 +63,6 @@ import { site } from '@/config/site';
         )}
         <h2>{site.author.name}</h2>
         <p>{site.author.bio}</p>
-        <p style="margin-top:22px">
-          状态：持续学习中
-          <br />
-          坐标：互联网的一角
-          <br />
-          这里：一座生长中的数字花园
-        </p>
       </aside>
     </div>
   </div>

@@ -2,7 +2,7 @@
 
 基于 Astro、TypeScript、Tailwind CSS、MDX 与 Pagefind 的静态个人技术博客。React 仅用于浏览器工具与文章中的交互演示。
 
-v1 已通过[本地验收](docs/verification.md)，可从 `dist/` 预览正式版本。站名、作者与内容为明确标注的示例；评论和统计默认关闭，尚未公网发布。
+青苗手记由低调D树苗维护。面向读者的文章放在 `src/content/articles/`，站点维护文档放在 `docs/`。v1 已通过[本地验收](docs/verification.md)，可预览 `dist/` 中的正式构建。示例内容带有单独标记。
 
 ## 启动
 
@@ -76,4 +76,4 @@ deploy/nginx.conf        静态服务器配置示例
 - [验收记录](docs/verification.md)：执行环境、验证结果与仍需发布阶段检查的事项。
 - [实施基线](docs/plans/blog-v1-implementation-plan.md)：确认的范围与验收清单。
 
-当前目录最初没有 Git 仓库。源码和忽略规则已准备，尚未创建远程仓库或提交。开始版本管理时可在本地执行 `git init`，再按自己的仓库地址关联远程。
+源码使用 `main` 分支维护，远程 `origin` 指向[青苗手记的 GitHub 仓库](https://github.com/low-key-sapling/sapling-blog)。

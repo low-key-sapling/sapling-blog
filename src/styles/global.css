@@ -320,11 +320,6 @@ kbd {
   gap: 28px;
   margin-top: 27px;
 }
-.hero-note {
-  margin-top: 24px;
-  font-size: 11px;
-  color: var(--muted);
-}
 .hero-art {
   position: relative;
   height: 305px;
@@ -1590,9 +1585,6 @@ dialog::backdrop {
   .hero-label {
     display: none;
   }
-  .hero-note {
-    font-size: 10px;
-  }
   .article-grid {
     grid-template-columns: 1fr 1fr;
   }
@@ -1686,9 +1678,6 @@ dialog::backdrop {
   .hero-actions {
     gap: 23px;
     margin-top: 22px;
-  }
-  .hero-note {
-    margin-top: 18px;
   }
   .section {
     padding-block: 30px;

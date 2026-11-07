@@ -4,6 +4,7 @@ name: 青苗手记 · 数字花园
 summary: 一个围绕写作与阅读设计的静态博客示例，将内容、搜索和小工具放在一起。
 stack: [Astro, TypeScript, Tailwind CSS, Pagefind]
 cover: ./images/sapling-desktop.png
+source: https://github.com/low-key-sapling/sapling-blog
 sample: true
 ---
 
@@ -25,4 +26,4 @@ sample: true
 
 ## 查看当前演示
 
-可以直接浏览[文章列表](/blog/)、[项目主页](/)或[工具箱](/tools/)。此示例没有公开源码仓库，故不展示占位仓库链接。
+可以直接浏览[文章列表](/blog/)、[项目主页](/)或[工具箱](/tools/)。

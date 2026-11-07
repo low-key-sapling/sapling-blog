@@ -29,10 +29,8 @@ const tags = [
           也留一点空间给好奇心。
         </h1>
         <p class="hero-description">
-          你好，欢迎来到{site.name}。<br />
-          这里有 Web 开发的探索、工程实践的笔记，
-          <br />
-          以及把小小想法变成现实的过程。
+          你好，我是{site.author.name}。<br />
+          {site.author.bio}
         </p>
         <div class="hero-actions">
           <a class="button" href="/blog/">
@@ -42,7 +40,6 @@ const tags = [
             关于这个角落 <Icon name="external" size={14} />
           </a>
         </div>
-        <p class="hero-note">这是一座生长中的数字花园 · 当前为示例内容</p>
       </div>
       <div class="hero-art" aria-hidden="true">
         <div class="hero-orbit"></div>
@@ -104,7 +101,7 @@ const tags = [
                   </a>
                   <span class="dot">·</span>
                   <span>{readingMinutes(article.body)} 分钟阅读</span>
-                  <span class="sample-note">示例</span>
+                  {article.data.sample && <span class="sample-note">示例</span>}
                 </div>
               </div>
               <Icon name="arrow" size={17} />

@@ -2,7 +2,9 @@
 
 ## 创建文章
 
-在 `src/content/articles/` 新建 Markdown 或 MDX 文件。可以为每篇文章建立独立目录，把正文和图片放在一起。
+面向读者的文章放在 `src/content/articles/`，支持 Markdown 和 MDX。分类由正文开头的 `category` 字段决定。纯文字文章可直接放一个文件，例如 [Windows BAT 脚本基础](../src/content/articles/windows-bat-basics.md)。有配图时，可以为文章建独立目录，把正文和图片放在一起。
+
+博客的[维护、部署和验收文档](README.md)放在 `docs/`。写博客草稿也使用文章目录，在开头设置 `draft: true` 即可本地预览。
 
 ```yaml
 ---
