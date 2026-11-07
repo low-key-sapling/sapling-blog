@@ -5,6 +5,8 @@ summary: 为什么在 if 里刚改完变量，echo 却打印旧值？用三个�
 published: 2026-11-07
 category: 日常创造
 tags: [Windows, BAT, 自动化]
+cover: ./images/cover.png
+coverAlt: Windows BAT 脚本手记封面，展示百分号与感叹号两种变量写法
 draft: false
 featured: true
 ---
@@ -54,6 +56,8 @@ percent=before
 delayed=inside
 after=inside
 ```
+
+![if 块先把百分号变量展开为 before，执行 set 后，感叹号变量读到 inside；块外的新命令也读到 inside](./images/variable-expansion.png)
 
 `cmd.exe` 会先读完整个 `if (...)` 命令，再执行里面的语句。读到右括号时，块中的 `%state%` 已经换成了 `before`。即使上一行的 `set` 已经生效，第一条 `echo` 拿到的仍是先前填好的文本。
 

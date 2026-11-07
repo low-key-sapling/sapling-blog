@@ -2,7 +2,21 @@
 
 ## 创建文章
 
-面向读者的文章放在 `src/content/articles/`，支持 Markdown 和 MDX。分类由正文开头的 `category` 字段决定。纯文字文章可直接放一个文件，例如 [Windows BAT 脚本基础](../src/content/articles/windows-bat-basics.md)。有配图时，可以为文章建独立目录，把正文和图片放在一起。
+面向读者的文章放在 `src/content/articles/`，支持 Markdown 和 MDX。新增文章按“分类目录 → 文章目录 → 正文与配图”存放。[Windows BAT 脚本基础](../src/content/articles/日常创造/windows-bat-basics/index.md)是一个可以复制的完整目录示例。
+
+```text
+src/content/articles/
+  日常创造/
+    windows-bat-basics/
+      index.md
+      images/
+        cover.png
+        variable-expansion.png
+```
+
+分类目录名与正文开头的 `category` 保持一致。网页读取该字段生成分类，文章目录名建议与 `slug` 一致。
+
+新增文章时，复制整个文章目录，修改目录名、`slug`、标题、摘要、日期和标签，设置 `draft: true`、`featured: false`，再替换正文与配图。跨分类写作时，同时修改分类目录和 `category`。文章之间使用 `/blog/<slug>/` 链接。
 
 博客的[维护、部署和验收文档](README.md)放在 `docs/`。写博客草稿也使用文章目录，在开头设置 `draft: true` 即可本地预览。
 
@@ -13,12 +27,10 @@ title: 文章标题
 summary: 说明这篇文章解决什么问题。
 published: 2026-11-05
 updated: 2026-11-06
-category: Web 工程
-tags: [Astro, 工程实践]
-series: build-a-digital-garden
-order: 4
-cover: ./cover.png
-coverAlt: 页面结构示意图
+category: 日常创造
+tags: [Windows, BAT, 自动化]
+cover: ./images/cover.png
+coverAlt: 文章封面的文字说明
 draft: true
 featured: false
 sample: false
@@ -47,13 +59,15 @@ sample: false
 
 ## 图片
 
-正文用相对路径引用图片：
+配图放在文章目录里的 `images/` 中，正文使用相对于 `index.md` 的路径。BAT 文章的正文配图写法如下：
 
 ```md
-![流程图的文字描述](./images/workflow.png)
+![if 块内外的变量展开时机](./images/variable-expansion.png)
 ```
 
-Astro 在构建时处理本地正文图片。封面由 `Cover.astro` 的 `Image` 组件生成响应式 WebP 资源。无封面时使用同源的矢量默认封面。内容性图片需要准确的替代文字；纯装饰可以留空。避免依赖不受控的远程图床。
+封面通过 `cover: ./images/cover.png` 引用，`coverAlt` 填写封面描述。配图支持 PNG、JPEG 和 WebP，引用路径使用实际文件名。移动整个文章目录时，正文与图片的相对位置保持一致。
+
+Astro 在构建时处理本地正文图片。封面由 `Cover.astro` 的 `Image` 组件生成响应式 WebP 资源。无封面时使用同源的矢量默认封面。内容性图片需要准确的替代文字；纯装饰可以留空。站点图标、默认分享图等全站资源放在 `public/`，使用 `/favicon.svg` 这类站点根路径引用。
 
 ## 系列
 
